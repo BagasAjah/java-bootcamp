@@ -22,6 +22,8 @@ public class WithdrawService implements IService {
 
     @Override
     public void display() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
         System.out.println("1. $10");
         System.out.println("2. $50");
         System.out.println("3. $100");
@@ -61,7 +63,7 @@ public class WithdrawService implements IService {
 
     private void withdrawBalance(int withdrawBalance, Scanner scanner) {
         accountInfo.withdrawProcess(withdrawBalance);
-        if (accountInfo.getErrorMessage().length() > 0) {
+        if (accountInfo.getErrorMessage() != null && accountInfo.getErrorMessage().length() > 0) {
             return;
         }
         SummaryService summaryService = new SummaryService(withdrawBalance, accountInfo.getBalance());

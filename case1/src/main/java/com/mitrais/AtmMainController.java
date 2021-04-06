@@ -14,6 +14,7 @@ public class AtmMainController {
             while (true) {
                 LoginService loginService = new LoginService();
                 if (!loginService.validate(getLoginInfo.apply(inputScanner))) {
+                    delay();
                     continue;
                 }
                 AccountInfo userInfo = loginService.getValidUser();
@@ -26,10 +27,20 @@ public class AtmMainController {
     private static Function<Scanner, AccountLogin> getLoginInfo = scanner -> {
         final String accountNumber;
         final String pin;
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
         System.out.print("Enter your Account Number: ");
         accountNumber = scanner.nextLine();
         System.out.print("Enter your PIN: ");
         pin = scanner.nextLine();
         return new AccountLogin(accountNumber, pin);
     };
+
+    private static void delay() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

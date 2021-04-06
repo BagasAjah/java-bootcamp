@@ -10,15 +10,14 @@ public class OtherWithdrawService implements IService {
 
     private AccountInfo accountInfo;
 
-    private boolean isExit;
-
     public OtherWithdrawService(AccountInfo accountInfo) {
-        this.isExit = false;
         this.accountInfo = accountInfo;
     }
 
     @Override
     public void display() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
         System.out.println("Other Withdraw");
         System.out.print("Enter amount withdraw :");
     }

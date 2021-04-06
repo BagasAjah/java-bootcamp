@@ -20,6 +20,8 @@ public class SummaryService implements IService {
         DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm a");
         LocalDateTime todayDatetime = LocalDateTime.now();
         String formatedDate = todayDatetime.format(datePattern);
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
         System.out.println("Summary");
         System.out.println("Date: " + formatedDate);
         System.out.println("Withdraw: $" + withdraw);

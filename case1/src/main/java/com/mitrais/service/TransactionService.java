@@ -2,6 +2,7 @@ package com.mitrais.service;
 
 import com.mitrais.model.AccountInfo;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class TransactionService implements IService {
@@ -16,6 +17,7 @@ public class TransactionService implements IService {
 
     @Override
     public void display() {
+        System.out.print("\033[H\033[2J");
         System.out.flush();
         System.out.println("1. Withdraw");
         System.out.println("2. Fund Transfer");
