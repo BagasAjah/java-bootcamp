@@ -24,9 +24,9 @@ public class OtherWithdrawService implements IService {
 
     @Override
     public boolean process(Scanner scanner) {
-        display();
+        this.display();
         String withdrawAmount = scanner.nextLine();
-        if (!validateAmount.apply(withdrawAmount)) {
+        if (!this.validateAmount.apply(withdrawAmount)) {
             return true;
         }
         SummaryService summaryService = new SummaryService(Integer.valueOf(withdrawAmount), accountInfo.getBalance());

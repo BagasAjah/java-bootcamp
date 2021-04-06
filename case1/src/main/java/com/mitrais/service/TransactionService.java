@@ -2,17 +2,16 @@ package com.mitrais.service;
 
 import com.mitrais.model.AccountInfo;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 public class TransactionService implements IService {
 
     private boolean isExit;
-    private AccountInfo userInfo;
+    private AccountInfo accountInfo;
 
-    public TransactionService(AccountInfo userInfo) {
+    public TransactionService(AccountInfo accountInfo) {
         this.isExit = false;
-        this.userInfo = userInfo;
+        this.accountInfo = accountInfo;
     }
 
     @Override
@@ -31,10 +30,10 @@ public class TransactionService implements IService {
         final String FUND_TRANSFER_TYPE = "2";
         final String EXIT_TYPE = "3";
         while (!isExit) {
-            display();
+            this.display();
             String transactionType = scanner.nextLine();
             if (WITHDRAW_TYPE.equals(transactionType)) {
-                WithdrawService withdrawService = new WithdrawService(userInfo);
+                WithdrawService withdrawService = new WithdrawService(accountInfo);
                 if (!withdrawService.process(scanner)) {
                     isExit = true;
                 }

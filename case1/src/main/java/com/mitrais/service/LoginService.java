@@ -13,13 +13,13 @@ public class LoginService {
     private AccountInfo validUser;
 
     public boolean validate(AccountLogin userLogin) {
-        if (!validateAccountNumber.apply(userLogin.getAccountNumber())) {
+        if (!this.validateAccountNumber.apply(userLogin.getAccountNumber())) {
             return false;
         }
-        if (!validatePin.apply(userLogin.getPin())) {
+        if (!this.validatePin.apply(userLogin.getPin())) {
             return false;
         }
-        if (!validateUserInfo.apply(userLogin)) {
+        if (!this.validateUserInfo.apply(userLogin)) {
             return false;
         }
         return true;
@@ -68,6 +68,6 @@ public class LoginService {
     };
 
     public AccountInfo getValidUser() {
-        return validUser;
+        return this.validUser;
     }
 }

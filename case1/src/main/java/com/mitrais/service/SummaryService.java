@@ -2,7 +2,6 @@ package com.mitrais.service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Scanner;
 
 public class SummaryService implements IService {
@@ -35,7 +34,7 @@ public class SummaryService implements IService {
     @Override
     public boolean process(Scanner scanner) {
         final String EXIT_OPTION = "2";
-        display();
+        this.display();
         String transactionType = scanner.nextLine();
         if (EXIT_OPTION.equals(transactionType)) {
             return false;

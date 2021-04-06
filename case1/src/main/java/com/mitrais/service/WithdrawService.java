@@ -15,9 +15,9 @@ public class WithdrawService implements IService {
     public WithdrawService(AccountInfo accountInfo) {
         this.isExit = false;
         this.accountInfo = accountInfo;
-        defaultOption.put("1", 10);
-        defaultOption.put("2", 50);
-        defaultOption.put("3", 100);
+        this.defaultOption.put("1", 10);
+        this.defaultOption.put("2", 50);
+        this.defaultOption.put("3", 100);
     }
 
     @Override
@@ -38,18 +38,18 @@ public class WithdrawService implements IService {
         final String OPTION_TWO = "2";
         final String OPTION_THREE = "3";
         final String OPTION_FOUR = "4";
-        while (!isExit) {
+        while (!this.isExit) {
             display();
             String withdrawType = scanner.nextLine();
             switch (withdrawType) {
                 case OPTION_ONE:
                 case OPTION_TWO:
                 case OPTION_THREE:
-                    int withdrawBalance = defaultOption.get(withdrawType);
-                    withdrawBalance(withdrawBalance, scanner);
+                    int withdrawBalance = this.defaultOption.get(withdrawType);
+                    this.withdrawBalance(withdrawBalance, scanner);
                     break;
                 case OPTION_FOUR:
-                    OtherWithdrawService withdrawService = new OtherWithdrawService(accountInfo);
+                    OtherWithdrawService withdrawService = new OtherWithdrawService(this.accountInfo);
                     if (!withdrawService.process(scanner)) {
                         this.isExit = true;
                     }
@@ -62,11 +62,11 @@ public class WithdrawService implements IService {
     }
 
     private void withdrawBalance(int withdrawBalance, Scanner scanner) {
-        accountInfo.withdrawProcess(withdrawBalance);
-        if (accountInfo.getErrorMessage() != null && accountInfo.getErrorMessage().length() > 0) {
+        this.accountInfo.withdrawProcess(withdrawBalance);
+        if (this.accountInfo.getErrorMessage() != null && this.accountInfo.getErrorMessage().length() > 0) {
             return;
         }
-        SummaryService summaryService = new SummaryService(withdrawBalance, accountInfo.getBalance());
+        SummaryService summaryService = new SummaryService(withdrawBalance, this.accountInfo.getBalance());
         if (!summaryService.process(scanner)) {
             this.isExit = true;
         }
