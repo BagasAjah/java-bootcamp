@@ -6,11 +6,15 @@ import com.mitrais.util.FormatUtils;
 
 import java.util.Map;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 
 public class LoginService {
 
     private AccountInfo validUser;
+    private UserService userService;
+
+    public LoginService(UserService userService) {
+        this.userService = userService;
+    }
 
     public boolean validate(AccountLogin userLogin) {
         if (!this.validateAccountNumber.apply(userLogin.getAccountNumber())) {
@@ -52,7 +56,6 @@ public class LoginService {
     };
 
     private Function<AccountLogin, Boolean> validateUserInfo = userLogin -> {
-        UserService userService = new UserService();
         Map<String, AccountInfo> userInfoMap = userService.getUserMap();
         if (!userInfoMap.containsKey(userLogin.getAccountNumber())) {
             System.out.println("Invalid Account Number/PIN");

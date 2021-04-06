@@ -1,6 +1,7 @@
 package com.mitrais.service;
 
 import com.mitrais.model.AccountInfo;
+import com.mitrais.util.DelayUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,11 +11,13 @@ public class WithdrawService implements IService {
 
     private boolean isExit;
     private AccountInfo accountInfo;
+    private UserService userService;
     private Map<String, Integer> defaultOption = new HashMap<>();
 
-    public WithdrawService(AccountInfo accountInfo) {
+    public WithdrawService(AccountInfo accountInfo, UserService userService) {
         this.isExit = false;
         this.accountInfo = accountInfo;
+        this.userService = userService;
         this.defaultOption.put("1", 10);
         this.defaultOption.put("2", 50);
         this.defaultOption.put("3", 100);
@@ -49,7 +52,7 @@ public class WithdrawService implements IService {
                     this.withdrawBalance(withdrawBalance, scanner);
                     break;
                 case OPTION_FOUR:
-                    OtherWithdrawService withdrawService = new OtherWithdrawService(this.accountInfo);
+                    IService withdrawService = new OtherWithdrawService(this.accountInfo);
                     if (!withdrawService.process(scanner)) {
                         this.isExit = true;
                     }
@@ -64,9 +67,11 @@ public class WithdrawService implements IService {
     private void withdrawBalance(int withdrawBalance, Scanner scanner) {
         this.accountInfo.withdrawProcess(withdrawBalance);
         if (this.accountInfo.getErrorMessage() != null && this.accountInfo.getErrorMessage().length() > 0) {
+            DelayUtils.delay();
             return;
         }
-        SummaryService summaryService = new SummaryService(withdrawBalance, this.accountInfo.getBalance());
+        this.userService.updateAccountValue(accountInfo);
+        IService summaryService = new SummaryService(withdrawBalance, this.accountInfo.getBalance());
         if (!summaryService.process(scanner)) {
             this.isExit = true;
         }

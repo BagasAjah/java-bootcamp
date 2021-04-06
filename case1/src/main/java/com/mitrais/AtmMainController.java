@@ -2,8 +2,11 @@ package com.mitrais;
 
 import com.mitrais.model.AccountInfo;
 import com.mitrais.model.AccountLogin;
+import com.mitrais.service.IService;
 import com.mitrais.service.LoginService;
 import com.mitrais.service.TransactionService;
+import com.mitrais.service.UserService;
+import com.mitrais.util.DelayUtils;
 
 import java.util.Scanner;
 import java.util.function.Function;
@@ -11,14 +14,15 @@ import java.util.function.Function;
 public class AtmMainController {
     public static void main(String args[]) {
         try (Scanner inputScanner = new Scanner(System.in)) {
+            UserService userService = new UserService();
             while (true) {
-                LoginService loginService = new LoginService();
+                LoginService loginService = new LoginService(userService);
                 if (!loginService.validate(getLoginInfo.apply(inputScanner))) {
-                    delay();
+                    DelayUtils.delay();
                     continue;
                 }
                 AccountInfo userInfo = loginService.getValidUser();
-                TransactionService transactionService = new TransactionService(userInfo);
+                IService transactionService = new TransactionService(userInfo, userService);
                 transactionService.process(inputScanner);
             }
         }
@@ -35,12 +39,4 @@ public class AtmMainController {
         pin = scanner.nextLine();
         return new AccountLogin(accountNumber, pin);
     };
-
-    private static void delay() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 }

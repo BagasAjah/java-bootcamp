@@ -17,6 +17,7 @@ public class AccountInfo extends Account {
     }
 
     public void withdrawProcess(int withdrawBalance) {
+        this.errorMessage = "";
         int estimatedBalance = this.balance - withdrawBalance;
         if (estimatedBalance < 0) {
             this.errorMessage = "Insufficient balance $" + withdrawBalance;
@@ -24,6 +25,10 @@ public class AccountInfo extends Account {
             return;
         }
         this.balance = estimatedBalance;
+    }
+
+    public void fundTransferProcess(int transferAmount) {
+        this.balance = this.balance + transferAmount;
     }
 
     public String getName() {
@@ -36,5 +41,14 @@ public class AccountInfo extends Account {
 
     public String getErrorMessage() {
         return errorMessage;
+    }
+
+    @Override
+    public String toString() {
+        return "AccountInfo{" +
+                "name='" + name + '\'' +
+                ", balance=" + balance +
+                ", errorMessage='" + errorMessage + '\'' +
+                '}';
     }
 }
