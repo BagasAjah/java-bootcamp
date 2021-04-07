@@ -10,11 +10,11 @@ import java.util.function.Function;
 
 public class FundTransferService implements IService {
     private AccountInfo accountInfo;
-    private UserService userService;
+    private AccountService accountService;
 
-    public FundTransferService(AccountInfo accountInfo, UserService userService) {
+    public FundTransferService(AccountInfo accountInfo, AccountService accountService) {
         this.accountInfo = accountInfo;
-        this.userService = userService;
+        this.accountService = accountService;
     }
 
     @Override
@@ -54,15 +54,15 @@ public class FundTransferService implements IService {
             DelayUtils.delay();
             return true;
         }
-        AccountInfo destinationAccountInfo = this.userService.getUserByAccountNumber(destinationAccount);
+        AccountInfo destinationAccountInfo = this.accountService.getUserByAccountNumber(destinationAccount);
         this.accountInfo.withdrawProcess(Integer.valueOf(amount));
         if (this.accountInfo.getErrorMessage().length() > 0) {
             DelayUtils.delay();
             return true;
         }
         destinationAccountInfo.fundTransferProcess(Integer.valueOf(amount));
-        this.userService.updateAccountValue(accountInfo);
-        this.userService.updateAccountValue(destinationAccountInfo);
+        this.accountService.updateAccountValue(accountInfo);
+        this.accountService.updateAccountValue(destinationAccountInfo);
         IService fundTransferSummaryService = new FundTransferSummaryService(destinationAccountInfo, Integer.valueOf(amount), referenceNumber);
         return fundTransferSummaryService.process(scanner);
     }

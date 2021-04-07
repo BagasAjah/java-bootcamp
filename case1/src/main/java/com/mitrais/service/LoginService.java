@@ -10,10 +10,10 @@ import java.util.function.Function;
 public class LoginService {
 
     private AccountInfo validUser;
-    private UserService userService;
+    private AccountService accountService;
 
-    public LoginService(UserService userService) {
-        this.userService = userService;
+    public LoginService(AccountService accountService) {
+        this.accountService = accountService;
     }
 
     public boolean validate(AccountLogin userLogin) {
@@ -56,7 +56,7 @@ public class LoginService {
     };
 
     private Function<AccountLogin, Boolean> validateUserInfo = userLogin -> {
-        Map<String, AccountInfo> userInfoMap = userService.getUserMap();
+        Map<String, AccountInfo> userInfoMap = accountService.getUserMap();
         if (!userInfoMap.containsKey(userLogin.getAccountNumber())) {
             System.out.println("Invalid Account Number/PIN");
             return false;

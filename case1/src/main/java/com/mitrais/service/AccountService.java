@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class UserService {
+public class AccountService {
 
     private AccountInfo userInfoOne = new AccountInfo("John Doe", 100, "222111", "112233");
     private AccountInfo userInfoTwo = new AccountInfo("Jane Doe", 30, "932012", "112244");
@@ -16,7 +16,7 @@ public class UserService {
     private Map<String, AccountInfo> accountInfoMap = this.userInfoList.stream()
             .collect(Collectors.toMap(user -> user.getAccountNumber(), user -> user));
 
-    public UserService() {
+    public AccountService() {
     }
 
     public Map<String, AccountInfo> getUserMap() {
@@ -28,8 +28,8 @@ public class UserService {
     }
 
     public AccountInfo getUserByAccountNumber(String accountNumber) {
-        UserService userService = new UserService();
-        Map<String, AccountInfo> userInfoMap = userService.getUserMap();
+        AccountService accountService = new AccountService();
+        Map<String, AccountInfo> userInfoMap = accountService.getUserMap();
         return userInfoMap.get(accountNumber);
     }
 }

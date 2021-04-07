@@ -11,13 +11,13 @@ public class WithdrawService implements IService {
 
     private boolean isExit;
     private AccountInfo accountInfo;
-    private UserService userService;
+    private AccountService accountService;
     private Map<String, Integer> defaultOption = new HashMap<>();
 
-    public WithdrawService(AccountInfo accountInfo, UserService userService) {
+    public WithdrawService(AccountInfo accountInfo, AccountService accountService) {
         this.isExit = false;
         this.accountInfo = accountInfo;
-        this.userService = userService;
+        this.accountService = accountService;
         this.defaultOption.put("1", 10);
         this.defaultOption.put("2", 50);
         this.defaultOption.put("3", 100);
@@ -70,7 +70,7 @@ public class WithdrawService implements IService {
             DelayUtils.delay();
             return;
         }
-        this.userService.updateAccountValue(accountInfo);
+        this.accountService.updateAccountValue(accountInfo);
         IService summaryService = new SummaryService(withdrawBalance, this.accountInfo.getBalance());
         if (!summaryService.process(scanner)) {
             this.isExit = true;

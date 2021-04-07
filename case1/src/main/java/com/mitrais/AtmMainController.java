@@ -5,7 +5,7 @@ import com.mitrais.model.AccountLogin;
 import com.mitrais.service.IService;
 import com.mitrais.service.LoginService;
 import com.mitrais.service.TransactionService;
-import com.mitrais.service.UserService;
+import com.mitrais.service.AccountService;
 import com.mitrais.util.DelayUtils;
 
 import java.util.Scanner;
@@ -14,15 +14,15 @@ import java.util.function.Function;
 public class AtmMainController {
     public static void main(String args[]) {
         try (Scanner inputScanner = new Scanner(System.in)) {
-            UserService userService = new UserService();
+            AccountService accountService = new AccountService();
             while (true) {
-                LoginService loginService = new LoginService(userService);
+                LoginService loginService = new LoginService(accountService);
                 if (!loginService.validate(getLoginInfo.apply(inputScanner))) {
                     DelayUtils.delay();
                     continue;
                 }
                 AccountInfo userInfo = loginService.getValidUser();
-                IService transactionService = new TransactionService(userInfo, userService);
+                IService transactionService = new TransactionService(userInfo, accountService);
                 transactionService.process(inputScanner);
             }
         }
