@@ -16,17 +16,14 @@ public class LoginService {
         this.accountService = accountService;
     }
 
-    public boolean validate(AccountLogin userLogin) {
+    public boolean login(AccountLogin userLogin) {
         if (!this.validateAccountNumber.apply(userLogin.getAccountNumber())) {
             return false;
         }
         if (!this.validatePin.apply(userLogin.getPin())) {
             return false;
         }
-        if (!this.validateUserInfo.apply(userLogin)) {
-            return false;
-        }
-        return true;
+        return this.validateUserInfo.apply(userLogin);
     }
 
     private Function<String, Boolean> validatePin = pin -> {
@@ -56,6 +53,7 @@ public class LoginService {
     };
 
     private Function<AccountLogin, Boolean> validateUserInfo = userLogin -> {
+//        return accountService.validateCredentials(userLogin); ToDo
         Map<String, AccountInfo> userInfoMap = accountService.getUserMap();
         if (!userInfoMap.containsKey(userLogin.getAccountNumber())) {
             System.out.println("Invalid Account Number/PIN");

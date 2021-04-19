@@ -9,6 +9,9 @@ public class TransactionService implements IService {
     private boolean isExit;
     private AccountInfo accountInfo;
     private AccountService accountService;
+    public static final String WITHDRAW_TYPE = "1";
+    public static final String FUND_TRANSFER_TYPE = "2";
+    public static final String EXIT_TYPE = "3";
 
     public TransactionService(AccountInfo accountInfo, AccountService accountService) {
         this.isExit = false;
@@ -28,12 +31,10 @@ public class TransactionService implements IService {
 
     @Override
     public boolean process(Scanner scanner) {
-        final String WITHDRAW_TYPE = "1";
-        final String FUND_TRANSFER_TYPE = "2";
-        final String EXIT_TYPE = "3";
         while (!this.isExit) {
             this.display();
             String transactionType = scanner.nextLine();
+            //todo change to switch
             if (WITHDRAW_TYPE.equals(transactionType)) {
                 IService withdrawService = new WithdrawService(this.accountInfo, this.accountService);
                 if (!withdrawService.process(scanner)) {

@@ -1,5 +1,5 @@
 package com.mitrais.model;
-
+//todo remove inherintance
 public class AccountInfo extends Account {
     private String name;
     private int balance;

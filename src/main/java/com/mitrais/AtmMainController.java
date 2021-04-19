@@ -17,7 +17,7 @@ public class AtmMainController {
             AccountService accountService = new AccountService();
             while (true) {
                 LoginService loginService = new LoginService(accountService);
-                if (!loginService.validate(getLoginInfo.apply(inputScanner))) {
+                if (!loginService.login(getLoginInfo.apply(inputScanner))) {
                     DelayUtils.delay();
                     continue;
                 }
@@ -25,6 +25,28 @@ public class AtmMainController {
                 IService transactionService = new TransactionService(userInfo, accountService);
                 transactionService.process(inputScanner);
             }
+        }
+    }
+
+    // ToDo use this instead of flush
+    public final static void clearConsole()
+    {
+        try
+        {
+            final String os = System.getProperty("os.name");
+
+            if (os.contains("Windows"))
+            {
+                Runtime.getRuntime().exec("cls");
+            }
+            else
+            {
+                Runtime.getRuntime().exec("clear");
+            }
+        }
+        catch (final Exception e)
+        {
+            //  Handle any exceptions.
         }
     }
 

@@ -30,6 +30,7 @@ public class FundTransferService implements IService {
         final String CONFIRM_OPTION = "1";
         this.display();
         final String destinationAccount = scanner.nextLine();
+        // refactor to new method
         if (destinationAccount.length() == 0) {
             return true;
         }
@@ -38,6 +39,7 @@ public class FundTransferService implements IService {
         if (amount.length() == 0) {
             return true;
         }
+        //===========
         final int referenceNumber = this.displayReferenceNumber();
         scanner.nextLine();
         this.displayConfirmation(destinationAccount, amount, referenceNumber);
@@ -54,6 +56,7 @@ public class FundTransferService implements IService {
             DelayUtils.delay();
             return true;
         }
+        // should be new mthod
         AccountInfo destinationAccountInfo = this.accountService.getUserByAccountNumber(destinationAccount);
         this.accountInfo.withdrawProcess(Integer.valueOf(amount));
         if (this.accountInfo.getErrorMessage().length() > 0) {
@@ -61,6 +64,7 @@ public class FundTransferService implements IService {
             return true;
         }
         destinationAccountInfo.fundTransferProcess(Integer.valueOf(amount));
+        //==============
         this.accountService.updateAccountValue(accountInfo);
         this.accountService.updateAccountValue(destinationAccountInfo);
         IService fundTransferSummaryService = new FundTransferSummaryService(destinationAccountInfo, Integer.valueOf(amount), referenceNumber);

@@ -13,14 +13,20 @@ public class WithdrawService implements IService {
     private AccountInfo accountInfo;
     private AccountService accountService;
     private Map<String, Integer> defaultOption = new HashMap<>();
+    public static final String OPTION_ONE = "1";
+    public static final String OPTION_TWO = "2";
+    public static final String OPTION_THREE = "3";
+    public static final String OPTION_FOUR = "4";
 
     public WithdrawService(AccountInfo accountInfo, AccountService accountService) {
         this.isExit = false;
         this.accountInfo = accountInfo;
         this.accountService = accountService;
+        //todo should be static
         this.defaultOption.put("1", 10);
         this.defaultOption.put("2", 50);
         this.defaultOption.put("3", 100);
+        //=================
     }
 
     @Override
@@ -37,10 +43,6 @@ public class WithdrawService implements IService {
 
     @Override
     public boolean process(Scanner scanner) {
-        final String OPTION_ONE = "1";
-        final String OPTION_TWO = "2";
-        final String OPTION_THREE = "3";
-        final String OPTION_FOUR = "4";
         while (!this.isExit) {
             display();
             String withdrawType = scanner.nextLine();
