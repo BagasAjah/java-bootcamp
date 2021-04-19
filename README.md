@@ -1,3 +1,12 @@
-# java-bootcamp-case-one
+How to Start The Program
+1 Build the the program
 
-Used for self learning only !!!
+mvn clean install
+
+2 Go to packaged jar application
+
+cd target/
+
+3 Run Application
+
+java -jar atm-simulator-1.0-SNAPSHOT.jar
