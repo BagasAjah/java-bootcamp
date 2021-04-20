@@ -1,6 +1,7 @@
 package com.mitrais.service;
 
 import com.mitrais.model.AccountInfo;
+import com.mitrais.util.Utils;
 
 import java.util.Scanner;
 
@@ -8,6 +9,8 @@ public class FundTransferSummaryService implements IService {
     private AccountInfo accountInfo;
     private int referenceNumber;
     private int transferAmount;
+    public static final String OPTION_ONE = "1";
+
     public FundTransferSummaryService(AccountInfo accountInfo, int transferAmount, int referenceNumber) {
         this.accountInfo = accountInfo;
         this.transferAmount = transferAmount;
@@ -16,8 +19,7 @@ public class FundTransferSummaryService implements IService {
 
     @Override
     public void display() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        Utils.clearConsole();
         System.out.println("Fund Transfer Summary");
         System.out.println("Destination Account : " + accountInfo.getAccountNumber());
         System.out.println("Transfer Amount : $" + transferAmount);
@@ -32,7 +34,6 @@ public class FundTransferSummaryService implements IService {
     @Override
     public boolean process(Scanner scanner) {
         this.display();
-        final String OPTION_ONE = "1";
         String transactionType = scanner.nextLine();
         if (OPTION_ONE.equals(transactionType)) {
             return true;

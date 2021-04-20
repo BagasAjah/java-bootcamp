@@ -2,7 +2,9 @@ package com.mitrais.service;
 
 import com.mitrais.model.AccountInfo;
 import com.mitrais.util.DelayUtils;
+import com.mitrais.util.Utils;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -12,27 +14,29 @@ public class WithdrawService implements IService {
     private boolean isExit;
     private AccountInfo accountInfo;
     private AccountService accountService;
-    private Map<String, Integer> defaultOption = new HashMap<>();
+    private static final Map<String, Integer> defaultOption;
     public static final String OPTION_ONE = "1";
     public static final String OPTION_TWO = "2";
     public static final String OPTION_THREE = "3";
     public static final String OPTION_FOUR = "4";
 
+    static {
+        Map<String, Integer> option = new HashMap<>();
+        option.put("1", 10);
+        option.put("2", 50);
+        option.put("3", 100);
+        defaultOption = Collections.unmodifiableMap(option);
+    }
+
     public WithdrawService(AccountInfo accountInfo, AccountService accountService) {
         this.isExit = false;
         this.accountInfo = accountInfo;
         this.accountService = accountService;
-        //todo should be static
-        this.defaultOption.put("1", 10);
-        this.defaultOption.put("2", 50);
-        this.defaultOption.put("3", 100);
-        //=================
     }
 
     @Override
     public void display() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        Utils.clearConsole();
         System.out.println("1. $10");
         System.out.println("2. $50");
         System.out.println("3. $100");

@@ -1,6 +1,7 @@
 package com.mitrais.service;
 
 import com.mitrais.model.AccountInfo;
+import com.mitrais.model.AccountLogin;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,5 +32,17 @@ public class AccountService {
         AccountService accountService = new AccountService();
         Map<String, AccountInfo> userInfoMap = accountService.getUserMap();
         return userInfoMap.get(accountNumber);
+    }
+
+    public AccountInfo validateCredentials(AccountLogin accountLogin) {
+        Map<String, AccountInfo> userInfoMap = getUserMap();
+        if (!userInfoMap.containsKey(accountLogin.getAccountNumber())) {
+            return null;
+        }
+        AccountInfo userInfo = userInfoMap.get(accountLogin.getAccountNumber());
+        if (!accountLogin.getPin().equals(userInfo.getPin())) {
+            return null;
+        }
+        return userInfo;
     }
 }

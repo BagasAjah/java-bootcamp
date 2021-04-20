@@ -1,6 +1,7 @@
 package com.mitrais.service;
 
 import com.mitrais.model.AccountInfo;
+import com.mitrais.util.Utils;
 
 import java.util.Scanner;
 
@@ -11,7 +12,6 @@ public class TransactionService implements IService {
     private AccountService accountService;
     public static final String WITHDRAW_TYPE = "1";
     public static final String FUND_TRANSFER_TYPE = "2";
-    public static final String EXIT_TYPE = "3";
 
     public TransactionService(AccountInfo accountInfo, AccountService accountService) {
         this.isExit = false;
@@ -21,8 +21,7 @@ public class TransactionService implements IService {
 
     @Override
     public void display() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        Utils.clearConsole();
         System.out.println("1. Withdraw");
         System.out.println("2. Fund Transfer");
         System.out.println("3. Exit");
@@ -34,19 +33,19 @@ public class TransactionService implements IService {
         while (!this.isExit) {
             this.display();
             String transactionType = scanner.nextLine();
-            //todo change to switch
-            if (WITHDRAW_TYPE.equals(transactionType)) {
-                IService withdrawService = new WithdrawService(this.accountInfo, this.accountService);
-                if (!withdrawService.process(scanner)) {
-                    this.isExit = true;
-                }
-            }
-            if (FUND_TRANSFER_TYPE.equals(transactionType)) {
-                IService fundTransferService = new FundTransferService(this.accountInfo, this.accountService);
-                fundTransferService.process(scanner);
-            }
-            if (transactionType.length() == 0 || EXIT_TYPE.equals(transactionType)) {
-                break;
+            switch (transactionType) {
+                case WITHDRAW_TYPE:
+                    IService withdrawService = new WithdrawService(this.accountInfo, this.accountService);
+                    if (!withdrawService.process(scanner)) {
+                        this.isExit = true;
+                    }
+                    break;
+                case FUND_TRANSFER_TYPE:
+                    IService fundTransferService = new FundTransferService(this.accountInfo, this.accountService);
+                    fundTransferService.process(scanner);
+                    break;
+                default:
+                    break;
             }
         }
         return true;

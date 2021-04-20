@@ -7,6 +7,7 @@ import com.mitrais.service.LoginService;
 import com.mitrais.service.TransactionService;
 import com.mitrais.service.AccountService;
 import com.mitrais.util.DelayUtils;
+import com.mitrais.util.Utils;
 
 import java.util.Scanner;
 import java.util.function.Function;
@@ -17,7 +18,7 @@ public class AtmMainController {
             AccountService accountService = new AccountService();
             while (true) {
                 LoginService loginService = new LoginService(accountService);
-                if (!loginService.login(getLoginInfo.apply(inputScanner))) {
+                if (!loginService.login(getLoginRequest.apply(inputScanner))) {
                     DelayUtils.delay();
                     continue;
                 }
@@ -28,33 +29,10 @@ public class AtmMainController {
         }
     }
 
-    // ToDo use this instead of flush
-    public final static void clearConsole()
-    {
-        try
-        {
-            final String os = System.getProperty("os.name");
-
-            if (os.contains("Windows"))
-            {
-                Runtime.getRuntime().exec("cls");
-            }
-            else
-            {
-                Runtime.getRuntime().exec("clear");
-            }
-        }
-        catch (final Exception e)
-        {
-            //  Handle any exceptions.
-        }
-    }
-
-    private static Function<Scanner, AccountLogin> getLoginInfo = scanner -> {
+    private static Function<Scanner, AccountLogin> getLoginRequest = scanner -> {
         final String accountNumber;
         final String pin;
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        Utils.clearConsole();
         System.out.print("Enter your Account Number: ");
         accountNumber = scanner.nextLine();
         System.out.print("Enter your PIN: ");

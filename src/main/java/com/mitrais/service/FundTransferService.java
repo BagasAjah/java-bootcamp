@@ -1,8 +1,10 @@
 package com.mitrais.service;
 
 import com.mitrais.model.AccountInfo;
+import com.mitrais.model.TransferDTO;
 import com.mitrais.util.DelayUtils;
 import com.mitrais.util.FormatUtils;
+import com.mitrais.util.Utils;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -11,6 +13,7 @@ import java.util.function.Function;
 public class FundTransferService implements IService {
     private AccountInfo accountInfo;
     private AccountService accountService;
+    public static final String CONFIRM_OPTION = "1";
 
     public FundTransferService(AccountInfo accountInfo, AccountService accountService) {
         this.accountInfo = accountInfo;
@@ -19,61 +22,71 @@ public class FundTransferService implements IService {
 
     @Override
     public void display() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        Utils.clearConsole();
         System.out.println("Please enter destination account and press enter to continue or");
         System.out.print("press enter to go back to Transaction:");
     }
 
     @Override
     public boolean process(Scanner scanner) {
-        final String CONFIRM_OPTION = "1";
         this.display();
-        final String destinationAccount = scanner.nextLine();
-        // refactor to new method
-        if (destinationAccount.length() == 0) {
+        TransferDTO transferDTO = getFundTransferRequest(scanner);
+        if (transferDTO == null) {
             return true;
         }
-        this.displayGetAmount();
-        final String amount = scanner.nextLine();
-        if (amount.length() == 0) {
-            return true;
-        }
-        //===========
-        final int referenceNumber = this.displayReferenceNumber();
-        scanner.nextLine();
-        this.displayConfirmation(destinationAccount, amount, referenceNumber);
+        this.displayConfirmation(transferDTO);
         final String confirmationType = scanner.nextLine();
         if (CONFIRM_OPTION.equals(confirmationType)) {
-            return confirmProcess(scanner, destinationAccount, amount, referenceNumber);
+            return confirmProcess(scanner, transferDTO);
         } else {
             return true;
         }
     }
 
-    private boolean confirmProcess(Scanner scanner, String destinationAccount, String amount, int referenceNumber) {
-        if (!this.validateUserInput(destinationAccount, amount)) {
+    private TransferDTO getFundTransferRequest(Scanner scanner) {
+        TransferDTO transferDTO = new TransferDTO();
+        final String destinationAccount = scanner.nextLine();
+        if (destinationAccount.length() == 0) {
+            return null;
+        }
+        transferDTO.setDestinationNumber(destinationAccount);
+        this.displayGetAmount();
+        final String amount = scanner.nextLine();
+        if (amount.length() == 0) {
+            return null;
+        }
+        transferDTO.setAmount(amount);
+        transferDTO.setReferenceNumber(this.displayReferenceNumber());
+        scanner.nextLine();
+        return transferDTO;
+    }
+
+    private boolean confirmProcess(Scanner scanner, TransferDTO transferDTO) {
+        if (!this.validateUserInput(transferDTO.getDestinationNumber(), transferDTO.getAmount())) {
             DelayUtils.delay();
             return true;
         }
-        // should be new mthod
-        AccountInfo destinationAccountInfo = this.accountService.getUserByAccountNumber(destinationAccount);
-        this.accountInfo.withdrawProcess(Integer.valueOf(amount));
-        if (this.accountInfo.getErrorMessage().length() > 0) {
-            DelayUtils.delay();
-            return true;
-        }
-        destinationAccountInfo.fundTransferProcess(Integer.valueOf(amount));
-        //==============
-        this.accountService.updateAccountValue(accountInfo);
-        this.accountService.updateAccountValue(destinationAccountInfo);
-        IService fundTransferSummaryService = new FundTransferSummaryService(destinationAccountInfo, Integer.valueOf(amount), referenceNumber);
+        AccountInfo destinationAccountInfo = transferProcess(transferDTO);
+        if (destinationAccountInfo == null) return true;
+        IService fundTransferSummaryService = new FundTransferSummaryService(destinationAccountInfo, Integer.valueOf(transferDTO.getAmount()), transferDTO.getReferenceNumber());
         return fundTransferSummaryService.process(scanner);
     }
 
+    private AccountInfo transferProcess(TransferDTO transferDTO) {
+        AccountInfo destinationAccountInfo = this.accountService.getUserByAccountNumber(transferDTO.getDestinationNumber());
+        this.accountInfo.withdrawProcess(Integer.valueOf(transferDTO.getAmount()));
+        if (this.accountInfo.getErrorMessage().length() > 0) {
+            DelayUtils.delay();
+            return null;
+        }
+        destinationAccountInfo.fundTransferProcess(Integer.valueOf(transferDTO.getAmount()));
+        this.accountService.updateAccountValue(accountInfo);
+        this.accountService.updateAccountValue(destinationAccountInfo);
+        return destinationAccountInfo;
+    }
+
     private void displayGetAmount() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        Utils.clearConsole();
         System.out.println("Please enter transfer amount and");
         System.out.println("press enter to continue or");
         System.out.print("press enter to go back to Transaction:");
@@ -82,20 +95,18 @@ public class FundTransferService implements IService {
     private int displayReferenceNumber() {
         Random random = new Random();
         int randomNumber = 100000 + random.nextInt(90000);
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        Utils.clearConsole();
         System.out.println("Reference Number: " + randomNumber + "(This is an autogenerated random 6 digits number)");
         System.out.println("press enter to continue");
         return randomNumber;
     }
 
-    private void displayConfirmation(String destinationAccount, String amount, int referenceNumber) {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+    private void displayConfirmation(TransferDTO transferDTO) {
+        Utils.clearConsole();
         System.out.println("Transfer Confirmation");
-        System.out.println("Destination Account : " + destinationAccount);
-        System.out.println("Transfer Amount : $" + amount);
-        System.out.println("Reference Number : " + referenceNumber);
+        System.out.println("Destination Account : " + transferDTO.getDestinationNumber());
+        System.out.println("Transfer Amount : $" + transferDTO.getAmount());
+        System.out.println("Reference Number : " + transferDTO.getReferenceNumber());
         System.out.println("");
         System.out.println("1. Confirm Trx");
         System.out.println("2. Cancel Trx");

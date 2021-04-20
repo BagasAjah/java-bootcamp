@@ -3,6 +3,7 @@ package com.mitrais.service;
 import com.mitrais.model.AccountInfo;
 import com.mitrais.util.DelayUtils;
 import com.mitrais.util.FormatUtils;
+import com.mitrais.util.Utils;
 
 import java.util.Scanner;
 import java.util.function.Function;
@@ -10,6 +11,9 @@ import java.util.function.Function;
 public class OtherWithdrawService implements IService {
 
     private AccountInfo accountInfo;
+    public static final int MAX_AMOUNT_VALUE = 1000;
+    public static final int MIN_AMOUNT_VALUE = 10;
+    public static final int MULTIPLE_AMOUNT_VALUE = 10;
 
     public OtherWithdrawService(AccountInfo accountInfo) {
         this.accountInfo = accountInfo;
@@ -17,8 +21,7 @@ public class OtherWithdrawService implements IService {
 
     @Override
     public void display() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        Utils.clearConsole();
         System.out.println("Other Withdraw");
         System.out.print("Enter amount withdraw :");
     }
@@ -41,9 +44,6 @@ public class OtherWithdrawService implements IService {
             return false;
         }
         int amount = Integer.valueOf(amountString);
-        final int MAX_AMOUNT_VALUE = 1000;
-        final int MIN_AMOUNT_VALUE = 10;
-        final int MULTIPLE_AMOUNT_VALUE = 10;
         if (amount > MAX_AMOUNT_VALUE) {
             System.out.println("Maximum amount to withdraw is $" + MAX_AMOUNT_VALUE);
             return false;

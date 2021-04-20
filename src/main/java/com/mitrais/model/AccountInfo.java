@@ -1,6 +1,8 @@
 package com.mitrais.model;
-//todo remove inherintance
-public class AccountInfo extends Account {
+
+public class AccountInfo {
+    private String accountNumber;
+    private String pin;
     private String name;
     private int balance;
     private String errorMessage;
@@ -41,6 +43,14 @@ public class AccountInfo extends Account {
 
     public String getErrorMessage() {
         return errorMessage;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public String getPin() {
+        return pin;
     }
 
     @Override
